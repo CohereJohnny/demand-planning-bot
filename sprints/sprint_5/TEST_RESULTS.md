@@ -211,3 +211,15 @@ The MCP Client with Cohere Command A Reasoning integration is **fully functional
 **Reviewed by**: Pending user verification  
 **Date**: October 23, 2025
 
+## Bug Found and Fixed
+
+**Issue**: Multi-turn conversation fails with 'invalid message at index 3: must have non-empty content or tool calls'
+
+**Cause**: When Cohere generates a response without text content in the first turn, the assistant message was added to conversation history without any content field, violating Cohere's API requirement.
+
+**Fix**: Modified `conversation.py` to ensure every assistant message has either:
+- Text content, OR
+- Tool calls, OR  
+- At minimum, an empty string content
+
+**Status**: Fixed and committed

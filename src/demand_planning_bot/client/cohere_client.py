@@ -186,12 +186,26 @@ class CohereToolUseClient:
             "conversation_turns": self.conversation.turn_count,
         }
 
-        # Extract text content
-        if hasattr(response, "message") and hasattr(response.message, "content"):
-            if response.message.content and len(response.message.content) > 0:
-                content_item = response.message.content[0]
-                if hasattr(content_item, "text"):
-                    result["text"] = content_item.text
+        # Extract text content from various possible locations
+        if hasattr(response, "message"):
+            # Try content field first
+            if hasattr(response.message, "content"):
+                if response.message.content and len(response.message.content) > 0:
+                    for content_item in response.message.content:
+                        if hasattr(content_item, "text") and content_item.text:
+                            result["text"] = content_item.text
+                            break
+            
+            # Fallback: try direct text field
+            if not result["text"] and hasattr(response.message, "text"):
+                if response.message.text:
+                    result["text"] = response.message.text
+        
+        # Log if we got an empty response
+        if not result["text"]:
+            logger.warning(f"Empty response text from Cohere. Response object: {response}")
+            logger.debug(f"Response.message: {response.message if hasattr(response, 'message') else 'N/A'}")
+            logger.debug(f"Response.message.content: {response.message.content if hasattr(response, 'message') and hasattr(response.message, 'content') else 'N/A'}")
 
         # Extract citations
         if hasattr(response, "message") and hasattr(response.message, "citations"):
