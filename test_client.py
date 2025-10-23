@@ -297,6 +297,55 @@ async def test_multistep_agent():
         return False
 
 
+async def test_parallel_tool_calls():
+    """Test parallel tool calls - Cohere calling multiple tools simultaneously."""
+    print("\n" + "=" * 70)
+    print("TEST 6: Parallel Tool Calls")
+    print("=" * 70)
+    
+    cohere_api_key = os.getenv("COHERE_API_KEY")
+    if not cohere_api_key:
+        print("❌ COHERE_API_KEY not found")
+        return False
+    
+    try:
+        mcp_client = MCPClient(transport="stdio")
+        
+        async with mcp_client.connect_stdio(server_script="server.py"):
+            cohere_client = CohereToolUseClient(
+                api_key=cohere_api_key,
+                mcp_client=mcp_client,
+            )
+            
+            await cohere_client.initialize_tools()
+            
+            # Query that could trigger parallel tool calls
+            print("\nQuery: 'What is the current price of both Brent crude and WTI?'")
+            result = await cohere_client.process_message(
+                "What is the current price of both Brent crude and WTI?"
+            )
+            
+            print(f"✅ Response: {result['text'][:150]}...")
+            print(f"   Tool calls made: {result['tool_calls_made']}")
+            
+            if result['tool_calls_made'] >= 2:
+                print(f"   ✅ Multiple tools called (possibly in parallel)")
+                print("\n✅ Parallel tool calls test successful")
+                return True
+            elif result['tool_calls_made'] == 1:
+                print(f"   ℹ️  Single tool call (model chose sequential approach)")
+                print("\n✅ Test passed (model decision)")
+                return True
+            else:
+                print(f"   ⚠️  No tool calls made")
+                return False
+            
+    except Exception as e:
+        print(f"❌ Test failed: {e}")
+        logger.error(f"Parallel tool calls test failed", exc_info=True)
+        return False
+
+
 async def main():
     """Run all tests."""
     print("\n" + "=" * 70)
@@ -310,6 +359,7 @@ async def main():
         ("Market Data Query", test_market_data_query),
         ("Conversation History", test_conversation_history),
         ("Multi-Step Agent Behavior", test_multistep_agent),
+        ("Parallel Tool Calls", test_parallel_tool_calls),
     ]
     
     results = []
