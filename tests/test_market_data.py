@@ -183,4 +183,3 @@ class TestGetMarketPricesTool:
         assert "price" in result
         # Falls back since no API key
         assert result["data_source"] == "fallback"
-

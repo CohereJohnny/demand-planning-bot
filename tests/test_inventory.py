@@ -40,7 +40,9 @@ class TestCalculateSafetyStock:
         lead_time_days = 21
         service_level = 0.95
 
-        safety_stock = calculate_safety_stock(demand_std_dev, lead_time_days, service_level)
+        safety_stock = calculate_safety_stock(
+            demand_std_dev, lead_time_days, service_level
+        )
 
         expected = 1.65 * 5000 * math.sqrt(21)
         assert safety_stock == pytest.approx(expected, rel=0.01)
@@ -76,7 +78,9 @@ class TestCalculateSafetyStock:
 
         assert high_std_dev_stock > low_std_dev_stock
         # Should be proportional to std dev
-        assert high_std_dev_stock / low_std_dev_stock == pytest.approx(7000 / 3000, rel=0.01)
+        assert high_std_dev_stock / low_std_dev_stock == pytest.approx(
+            7000 / 3000, rel=0.01
+        )
 
     def test_longer_lead_time_increases_safety_stock(self):
         """Test that longer lead time increases safety stock."""
@@ -136,7 +140,9 @@ class TestCalculateCarryingCostComponents:
         duration_months = 3
         cost_per_barrel_month = 1.5
 
-        costs_small = calculate_carrying_cost_components(50000, duration_months, cost_per_barrel_month)
+        costs_small = calculate_carrying_cost_components(
+            50000, duration_months, cost_per_barrel_month
+        )
         costs_large = calculate_carrying_cost_components(
             100000, duration_months, cost_per_barrel_month
         )
@@ -150,8 +156,12 @@ class TestCalculateCarryingCostComponents:
         inventory_barrels = 100000
         cost_per_barrel_month = 1.5
 
-        costs_short = calculate_carrying_cost_components(inventory_barrels, 3, cost_per_barrel_month)
-        costs_long = calculate_carrying_cost_components(inventory_barrels, 6, cost_per_barrel_month)
+        costs_short = calculate_carrying_cost_components(
+            inventory_barrels, 3, cost_per_barrel_month
+        )
+        costs_long = calculate_carrying_cost_components(
+            inventory_barrels, 6, cost_per_barrel_month
+        )
 
         assert costs_long["total_carrying_cost"] == pytest.approx(
             costs_short["total_carrying_cost"] * 2, rel=0.01
@@ -252,7 +262,9 @@ class TestCalculateInventoryRequirementsTool:
         result = tool(current_inventory_barrels=500000, daily_demand_barrels=50000)
 
         expected_days = 500000 / 50000  # 10 days
-        assert result["current_days_of_supply"] == pytest.approx(expected_days, rel=0.01)
+        assert result["current_days_of_supply"] == pytest.approx(
+            expected_days, rel=0.01
+        )
 
     def test_sufficient_inventory_no_increase(self, mock_config):
         """Test that sufficient inventory results in no increase recommendation."""
@@ -345,7 +357,11 @@ class TestCalculateCarryingCostsTool:
         """Test accuracy of cost calculations."""
         tool = get_calculate_carrying_costs_tool(mock_config)
 
-        result = tool(inventory_increase_barrels=100000, duration_months=3, cost_per_barrel_month=1.5)
+        result = tool(
+            inventory_increase_barrels=100000,
+            duration_months=3,
+            cost_per_barrel_month=1.5,
+        )
 
         # Expected:
         # Total = 100,000 × 3 × $1.50 = $450,000
@@ -405,7 +421,9 @@ class TestCalculateCarryingCostsTool:
             + result["opportunity_cost_usd"]
         )
 
-        assert components_sum == pytest.approx(result["total_carrying_cost_usd"], rel=0.01)
+        assert components_sum == pytest.approx(
+            result["total_carrying_cost_usd"], rel=0.01
+        )
 
     def test_monthly_cost_calculation(self, mock_config):
         """Test monthly cost calculation."""
@@ -413,7 +431,9 @@ class TestCalculateCarryingCostsTool:
         result = tool(duration_months=6)
 
         expected_monthly = result["total_carrying_cost_usd"] / 6
-        assert result["monthly_carrying_cost_usd"] == pytest.approx(expected_monthly, rel=0.01)
+        assert result["monthly_carrying_cost_usd"] == pytest.approx(
+            expected_monthly, rel=0.01
+        )
 
     def test_zero_inventory(self, mock_config):
         """Test with zero inventory increase."""
@@ -454,4 +474,3 @@ class TestCalculateCarryingCostsTool:
         # Should mention percentages
         assumptions_text = " ".join(result["assumptions"])
         assert "40%" in assumptions_text or "20%" in assumptions_text
-

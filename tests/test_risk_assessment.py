@@ -116,7 +116,9 @@ class TestCalculateRiskScore:
         score, level, keywords = calculate_risk_score(articles)
         assert score > 40  # Should be high risk
         assert level == "high"
-        assert any(kw in keywords for kw in ["war", "conflict", "sanctions", "blockade"])
+        assert any(
+            kw in keywords for kw in ["war", "conflict", "sanctions", "blockade"]
+        )
 
     def test_medium_risk_keywords(self):
         """Test articles with medium-risk keywords."""
@@ -248,4 +250,3 @@ class TestGetGeopoliticalRiskAssessmentTool:
 
         # Should fall back when no articles found
         assert result["data_source"] == "fallback"
-

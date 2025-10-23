@@ -113,7 +113,9 @@ class TestCalculateDisruptionImpact:
         assert "error" not in impact
         assert impact["refinery"] == "Singapore Refinery"
         assert impact["feedstock_shortage_percentage"] == 70.0  # Higher than Rotterdam
-        assert impact["procurement_cost_increase_percentage"] == 35.0  # Higher than Rotterdam
+        assert (
+            impact["procurement_cost_increase_percentage"] == 35.0
+        )  # Higher than Rotterdam
         assert impact["days_until_impact"] == 25  # Singapore inventory days
 
     def test_pipeline_outage_impact(self, mock_config):
@@ -279,16 +281,21 @@ class TestSimulateSupplyDisruptionTool:
         result = tool(disruption_type="strait_of_hormuz_closure")
 
         rotterdam = next(
-            r for r in result["affected_refineries"] if r["refinery"] == "Rotterdam Refinery"
+            r
+            for r in result["affected_refineries"]
+            if r["refinery"] == "Rotterdam Refinery"
         )
         singapore = next(
-            r for r in result["affected_refineries"] if r["refinery"] == "Singapore Refinery"
+            r
+            for r in result["affected_refineries"]
+            if r["refinery"] == "Singapore Refinery"
         )
 
         # Singapore should have higher shortage % for Strait of Hormuz
-        assert singapore["feedstock_shortage_percentage"] > rotterdam[
-            "feedstock_shortage_percentage"
-        ]
+        assert (
+            singapore["feedstock_shortage_percentage"]
+            > rotterdam["feedstock_shortage_percentage"]
+        )
 
     def test_result_structure(self, mock_config):
         """Test that result has all required fields."""
@@ -342,4 +349,3 @@ class TestSimulateSupplyDisruptionTool:
         assert "assumptions" in result
         assert isinstance(result["assumptions"], list)
         assert len(result["assumptions"]) > 0
-

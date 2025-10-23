@@ -68,7 +68,9 @@ def calculate_carrying_cost_components(
 
     # Insurance cost (risk protection)
     insurance_cost_per_barrel_month = cost_per_barrel_month * 0.2  # 20% of total
-    insurance_cost = inventory_barrels * insurance_cost_per_barrel_month * duration_months
+    insurance_cost = (
+        inventory_barrels * insurance_cost_per_barrel_month * duration_months
+    )
 
     # Opportunity cost (capital tied up)
     # Assume $80/barrel * 5% annual rate / 12 months = $0.33/barrel/month
@@ -235,4 +237,3 @@ def get_calculate_carrying_costs_tool(config: Config):
         return result
 
     return calculate_carrying_costs
-

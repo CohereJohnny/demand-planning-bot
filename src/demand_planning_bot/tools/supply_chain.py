@@ -85,7 +85,11 @@ REFINERY_DATA = {
         "name": "Rotterdam Refinery",
         "location": "Rotterdam, Netherlands",
         "capacity_barrels_per_day": 400000,
-        "primary_feedstock_sources": ["North Sea", "Middle East via Suez", "West Africa"],
+        "primary_feedstock_sources": [
+            "North Sea",
+            "Middle East via Suez",
+            "West Africa",
+        ],
         "typical_inventory_days": 30,
         "transit_time_days": {
             "Middle East (Strait of Hormuz)": 21,
@@ -97,7 +101,11 @@ REFINERY_DATA = {
         "name": "Singapore Refinery",
         "location": "Singapore",
         "capacity_barrels_per_day": 500000,
-        "primary_feedstock_sources": ["Middle East via Strait", "Southeast Asia", "Australia"],
+        "primary_feedstock_sources": [
+            "Middle East via Strait",
+            "Southeast Asia",
+            "Australia",
+        ],
         "typical_inventory_days": 25,
         "transit_time_days": {
             "Middle East (Strait of Hormuz)": 14,
@@ -173,7 +181,9 @@ def calculate_disruption_impact(
     barrels_affected = daily_capacity * (shortage_percentage / 100) * duration_days
     # Assume $80/barrel baseline; cost increase applies to replacement crude
     baseline_cost_per_barrel = 80.0
-    additional_cost_per_barrel = baseline_cost_per_barrel * (cost_increase_percentage / 100)
+    additional_cost_per_barrel = baseline_cost_per_barrel * (
+        cost_increase_percentage / 100
+    )
     total_additional_cost = barrels_affected * additional_cost_per_barrel
 
     # Mitigation timeline
@@ -189,7 +199,9 @@ def calculate_disruption_impact(
     mitigation_timeline.append(
         {
             "day": days_until_impact,
-            "date": (current_date + timedelta(days=days_until_impact)).strftime("%Y-%m-%d"),
+            "date": (current_date + timedelta(days=days_until_impact)).strftime(
+                "%Y-%m-%d"
+            ),
             "event": f"{refinery_info['name']} begins to feel impact (inventory depleted)",
         }
     )
@@ -235,7 +247,10 @@ def get_simulate_supply_disruption_tool(config: Config):
 
     def simulate_supply_disruption(
         disruption_type: Literal[
-            "strait_of_hormuz_closure", "pipeline_outage", "port_closure", "weather_event"
+            "strait_of_hormuz_closure",
+            "pipeline_outage",
+            "port_closure",
+            "weather_event",
         ] = "strait_of_hormuz_closure",
         affected_refineries: List[Literal["rotterdam", "singapore"]] = None,
         duration_days: int = 14,
@@ -288,4 +303,3 @@ def get_simulate_supply_disruption_tool(config: Config):
         return result
 
     return simulate_supply_disruption
-
