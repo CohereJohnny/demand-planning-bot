@@ -176,11 +176,16 @@ uv format --preview-features format --check
 - Error handling and fallback data
 - Comprehensive unit tests (26 tests)
 
-### Next Sprints
-- Supply chain disruption simulation
-- Inventory optimization tools
+### Sprint 3 - ✅ Complete
+- Supply chain disruption simulation (4 scenarios)
+- Inventory optimization tools (safety stock calculations)
+- Carrying cost analysis (storage, insurance, opportunity cost)
+- Comprehensive unit tests (54 new tests, 80 total)
+
+### Next Sprint
 - Financial analysis tools (ROI, revenue impact)
 - Regulatory compliance tools
+- Integration testing and documentation
 
 ## Available Tools
 
@@ -197,7 +202,7 @@ Test tool to verify server is working.
 {
   "echo": "Hello",
   "status": "Server is running",
-  "tools_available": "Sprint 2: Market data and risk assessment tools available"
+  "tools_available": "Sprint 3: Market, risk, supply chain, and inventory tools available"
 }
 ```
 
@@ -265,14 +270,152 @@ Assess geopolitical risks affecting oil supply chains. Analyzes recent news to i
 
 ---
 
-### Future Tools
+### `simulate_supply_disruption` (Supply Chain Simulation)
+Simulate the impact of supply chain disruptions on refinery operations. Models scenarios like Strait of Hormuz closure, pipeline outages, port closures, or weather events. Calculates feedstock shortages, cost increases, and timelines. Provides alternative supply routes and mitigation strategies.
 
-- `simulate_supply_disruption`: Model disruption impacts on refinery operations
-- `calculate_inventory_requirements`: Optimize safety stock levels
-- `calculate_carrying_costs`: Estimate storage and holding costs
+**Parameters**:
+- `disruption_type` (string, default: "strait_of_hormuz_closure"): Type of disruption
+  - `"strait_of_hormuz_closure"`: Major chokepoint closure
+  - `"pipeline_outage"`: Crude transport disruption
+  - `"port_closure"`: Loading/receiving port closure
+  - `"weather_event"`: Hurricane/typhoon
+- `affected_refineries` (array, default: ["rotterdam", "singapore"]): List of refineries to analyze
+- `duration_days` (integer, default: 14): Expected duration of disruption (1-90 days)
+
+**Returns**: Dictionary with disruption analysis
+- `disruption_type`: Type of disruption
+- `disruption_name`: Human-readable name
+- `description`: Detailed scenario description
+- `severity`: "low", "medium", or "high"
+- `duration_days`: Expected duration
+- `affected_refineries`: Array of refinery impact analyses
+  - `refinery`: Refinery name
+  - `feedstock_shortage_percentage`: % of feedstock affected
+  - `procurement_cost_increase_percentage`: % increase in costs
+  - `additional_procurement_cost_usd`: Total additional cost
+  - `days_until_impact`: Days before impact felt
+  - `mitigation_timeline`: Timeline of events
+  - `alternative_routes`: Alternative supply options
+- `confidence`: "high"
+- `assumptions`: List of modeling assumptions
+
+**Example**:
+```json
+{
+  "disruption_type": "strait_of_hormuz_closure",
+  "disruption_name": "Strait of Hormuz Closure",
+  "severity": "high",
+  "duration_days": 14,
+  "affected_refineries": [
+    {
+      "refinery": "Rotterdam Refinery",
+      "feedstock_shortage_percentage": 50.0,
+      "procurement_cost_increase_percentage": 25.0,
+      "additional_procurement_cost_usd": 140000000.0,
+      "days_until_impact": 30,
+      "alternative_routes": [
+        "Suez Canal via Red Sea (adds 10-14 days)",
+        "Cape of Good Hope (adds 20-30 days)"
+      ]
+    }
+  ]
+}
+```
+
+---
+
+### `calculate_inventory_requirements` (Inventory Optimization)
+Calculate recommended inventory levels and safety stock based on demand forecasts, risk levels, and lead times. Uses industry-standard formulas (z-score method) to determine optimal safety stock to mitigate supply chain risks while minimizing stockout probability.
+
+**Parameters**:
+- `current_inventory_barrels` (number, default: 500000): Current inventory on hand
+- `daily_demand_barrels` (number, default: 50000): Average daily demand
+- `demand_std_dev_barrels` (number, default: 5000): Standard deviation of daily demand
+- `lead_time_days` (number, default: 21): Procurement lead time in days
+- `risk_level` (string, default: "medium"): Assessed risk level
+  - `"low"`: 95% service level (z=1.65)
+  - `"medium"`: 97.5% service level (z=1.96)
+  - `"high"`: 99% service level (z=2.33)
+
+**Returns**: Dictionary with inventory recommendations
+- `current_inventory_barrels`: Current inventory level
+- `current_days_of_supply`: Days of supply at current inventory
+- `recommended_safety_stock_barrels`: Recommended safety stock
+- `additional_storage_needed_barrels`: Additional inventory needed
+- `safety_stock_increase_percentage`: % increase recommended
+- `service_level_percentage`: Target service level
+- `rationale`: Explanation of recommendation
+- `formula_used`: "Safety Stock = z × σ × √L (z-score method)"
+- `assumptions`: List of calculation assumptions
+- `confidence`: "high"
+
+**Example**:
+```json
+{
+  "current_inventory_barrels": 500000,
+  "current_days_of_supply": 10.0,
+  "daily_demand_barrels": 50000,
+  "lead_time_days": 21,
+  "risk_level": "high",
+  "service_level_percentage": 99.0,
+  "recommended_safety_stock_barrels": 53439,
+  "additional_storage_needed_barrels": 603439,
+  "safety_stock_increase_percentage": 120.7,
+  "rationale": "To maintain 99.0% service level under high risk conditions...",
+  "formula_used": "Safety Stock = z × σ × √L (z-score method)"
+}
+```
+
+---
+
+### `calculate_carrying_costs` (Financial Analysis)
+Calculate the total cost of holding additional inventory over a period. Includes storage costs (warehousing), insurance costs (risk protection), and opportunity costs (capital tied up). Helps evaluate the financial impact of inventory investments for risk mitigation.
+
+**Parameters**:
+- `inventory_increase_barrels` (number, default: 100000): Additional inventory to hold
+- `duration_months` (integer, default: 3): How long to hold the inventory (1-24 months)
+- `cost_per_barrel_month` (number, default: 1.5): Cost to store one barrel for one month (USD)
+  - Industry typical: $1.00-$2.00/barrel/month
+
+**Returns**: Dictionary with cost analysis
+- `inventory_increase_barrels`: Additional inventory quantity
+- `duration_months`: Holding period
+- `cost_per_barrel_month`: Unit cost rate
+- `storage_cost_usd`: Physical warehousing cost (40% of total)
+- `insurance_cost_usd`: Risk protection cost (20% of total)
+- `opportunity_cost_usd`: Capital tied up cost (40% of total)
+- `total_carrying_cost_usd`: Total cost
+- `monthly_carrying_cost_usd`: Average monthly cost
+- `cost_breakdown`: Percentage breakdown by category
+- `assumptions`: List of cost assumptions
+
+**Example**:
+```json
+{
+  "inventory_increase_barrels": 100000,
+  "duration_months": 3,
+  "cost_per_barrel_month": 1.5,
+  "storage_cost_usd": 180000.00,
+  "insurance_cost_usd": 90000.00,
+  "opportunity_cost_usd": 180000.00,
+  "total_carrying_cost_usd": 450000.00,
+  "monthly_carrying_cost_usd": 150000.00,
+  "cost_breakdown": {
+    "storage_percentage": 40,
+    "insurance_percentage": 20,
+    "opportunity_cost_percentage": 40
+  }
+}
+```
+
+---
+
+### Future Tools (Sprint 4)
+
 - `calculate_revenue_impact`: Calculate potential revenue loss from stockouts
 - `calculate_roi`: Compute ROI for inventory or operational decisions
-- `get_regulatory_updates`: Retrieve compliance requirements
+- `get_regulatory_updates`: Retrieve IMO compliance requirements
+- `calculate_compliance_costs`: Estimate costs for regulatory compliance
 
 ## Troubleshooting
 
