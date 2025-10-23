@@ -123,6 +123,11 @@ Implement MCP Client with Cohere Command A integration to test the demand planni
 - Test results: 4/4 tests passed (100%)
 - Cohere Command A Reasoning model working perfectly
 
+**Bug Fixes**:
+- Fixed: Empty assistant messages causing Cohere API error
+- Fixed: Response text extraction from multi-item content arrays
+- Both fixes committed and verified with test suite
+
 ---
 
 ### 8. Documentation
@@ -152,17 +157,19 @@ Implement MCP Client with Cohere Command A integration to test the demand planni
 - ⚠️ Unit tests for schema adapter pending
 
 **Gaps/Issues**:
-- Testing section not completed (tasks 7.1-7.7)
+- HTTP transport testing pending (task 7.2)
 - Unit tests for cohere_adapter.py not written (task 2.4)
-- Need to verify with actual Cohere API key
-- Should test all use case scenarios from specs/use-case.md
+- Parallel tool calls testing pending (task 7.4)
+- Multi-step agent behavior testing pending (task 7.5)
+- Use case scenarios testing pending (task 7.7)
 
 **Next Steps**:
-1. Obtain Cohere API key for testing
-2. Perform end-to-end testing with MCP server
-3. Test all demand planning scenarios
-4. Add unit tests for schema conversion
-5. Document any issues in bug_swatting.md
-6. Create sprint report
-7. Merge to main and tag sprint-5
+1. ✅ Perform end-to-end testing with MCP server - COMPLETED
+2. Test HTTP transport connection (optional)
+3. Test parallel tool calls scenario
+4. Test multi-step agent behavior
+5. Test full use case scenarios from specs/use-case.md
+6. Add unit tests for schema conversion
+7. Create sprint report
+8. Merge to main and tag sprint-5
 
