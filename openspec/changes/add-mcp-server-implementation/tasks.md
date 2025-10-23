@@ -57,20 +57,20 @@
 - [x] 7.7 Write unit tests for inventory calculations
 
 ## 8. Financial Calculation Tools
-- [ ] 8.1 Implement `calculate_revenue_impact` tool in `tools/financial.py`
-- [ ] 8.2 Calculate potential revenue loss from stockouts
-- [ ] 8.3 Implement order fulfillment rate assumptions
-- [ ] 8.4 Implement `calculate_roi` tool
-- [ ] 8.5 Calculate ROI multiplier for inventory investments
-- [ ] 8.6 Include net benefit calculations
-- [ ] 8.7 Write unit tests for financial calculations
+- [x] 8.1 Implement `calculate_revenue_impact` tool in `tools/financial.py`
+- [x] 8.2 Calculate potential revenue loss from stockouts
+- [x] 8.3 Implement order fulfillment rate assumptions
+- [x] 8.4 Implement `calculate_roi` tool
+- [x] 8.5 Calculate ROI multiplier for inventory investments
+- [x] 8.6 Include net benefit calculations
+- [x] 8.7 Write unit tests for financial calculations
 
 ## 9. Regulatory Compliance Tools
-- [ ] 9.1 Implement `get_regulatory_updates` tool in `tools/regulatory.py`
-- [ ] 9.2 Create static reference data for IMO regulations
-- [ ] 9.3 Add sulfur emission compliance cost calculations
-- [ ] 9.4 Include effective dates and compliance requirements
-- [ ] 9.5 Write unit tests for regulatory tools
+- [x] 9.1 Implement `get_regulatory_updates` tool in `tools/regulatory.py`
+- [x] 9.2 Create static reference data for IMO regulations
+- [x] 9.3 Add sulfur emission compliance cost calculations
+- [x] 9.4 Include effective dates and compliance requirements
+- [x] 9.5 Write unit tests for regulatory tools
 
 ## 10. Integration Testing
 - [ ] 10.1 Test server startup with stdio transport
