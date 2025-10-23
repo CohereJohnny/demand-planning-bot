@@ -12,9 +12,16 @@ import sys
 
 from north_mcp_python_sdk import NorthMCPServer
 
+from src.demand_planning_bot.tools.inventory import (
+    get_calculate_carrying_costs_tool,
+    get_calculate_inventory_requirements_tool,
+)
 from src.demand_planning_bot.tools.market_data import get_market_prices_tool
 from src.demand_planning_bot.tools.risk_assessment import (
     get_geopolitical_risk_assessment_tool,
+)
+from src.demand_planning_bot.tools.supply_chain import (
+    get_simulate_supply_disruption_tool,
 )
 from src.demand_planning_bot.utils.config import load_config
 
@@ -65,7 +72,7 @@ def create_server(config) -> NorthMCPServer:
         return {
             "echo": message,
             "status": "Server is running",
-            "tools_available": "Sprint 2: Market data and risk assessment tools available",
+            "tools_available": "Sprint 3: Market, risk, supply chain, and inventory tools available",
         }
 
     # Register market data tool
@@ -76,11 +83,25 @@ def create_server(config) -> NorthMCPServer:
     get_geopolitical_risk_assessment = get_geopolitical_risk_assessment_tool(config)
     mcp.tool()(get_geopolitical_risk_assessment)
 
+    # Register supply chain simulation tool
+    simulate_supply_disruption = get_simulate_supply_disruption_tool(config)
+    mcp.tool()(simulate_supply_disruption)
+
+    # Register inventory optimization tools
+    calculate_inventory_requirements = get_calculate_inventory_requirements_tool(config)
+    mcp.tool()(calculate_inventory_requirements)
+
+    calculate_carrying_costs = get_calculate_carrying_costs_tool(config)
+    mcp.tool()(calculate_carrying_costs)
+
     logger.info("MCP server configured successfully")
     logger.info("Registered tools:")
     logger.info("  - ping (test tool)")
     logger.info("  - get_market_prices (EIA API - oil prices)")
     logger.info("  - get_geopolitical_risk_assessment (NewsAPI - risk analysis)")
+    logger.info("  - simulate_supply_disruption (supply chain disruption modeling)")
+    logger.info("  - calculate_inventory_requirements (safety stock calculations)")
+    logger.info("  - calculate_carrying_costs (inventory cost analysis)")
 
     return mcp
 
