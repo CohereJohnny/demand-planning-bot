@@ -73,7 +73,9 @@ class APIClient:
 
         for attempt in range(self.max_retries):
             try:
-                logger.debug(f"Making GET request to {url} (attempt {attempt + 1}/{self.max_retries})")
+                logger.debug(
+                    f"Making GET request to {url} (attempt {attempt + 1}/{self.max_retries})"
+                )
 
                 response = self.client.get(url, params=params, headers=headers)
 
@@ -144,7 +146,9 @@ class APIClient:
         # All retries exhausted
         logger.error(f"All retry attempts exhausted for {url}")
         if last_error:
-            raise APIError(f"Request failed after {self.max_retries} attempts") from last_error
+            raise APIError(
+                f"Request failed after {self.max_retries} attempts"
+            ) from last_error
         raise APIError(f"Request failed after {self.max_retries} attempts")
 
     def close(self) -> None:
@@ -158,4 +162,3 @@ class APIClient:
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Context manager exit."""
         self.close()
-

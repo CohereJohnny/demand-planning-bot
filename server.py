@@ -136,8 +136,12 @@ def main():
             logger.info("Connect using MCP Inspector with stdio configuration")
             mcp.run(transport="stdio")
         else:
-            logger.info(f"Starting server with Streamable HTTP transport on port {config.port}...")
-            logger.info(f"Server will be available at: http://localhost:{config.port}/mcp")
+            logger.info(
+                f"Starting server with Streamable HTTP transport on port {config.port}..."
+            )
+            logger.info(
+                f"Server will be available at: http://localhost:{config.port}/mcp"
+            )
             logger.info("Connect using MCP Inspector with HTTP configuration")
             mcp.run(transport="streamable-http")
 
@@ -151,4 +155,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

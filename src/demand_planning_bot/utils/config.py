@@ -108,4 +108,3 @@ def _validate_config(config: Config) -> None:
         logger.debug(
             f"API keys: EIA={config.has_eia_api_key}, News={config.has_news_api_key}"
         )
-
