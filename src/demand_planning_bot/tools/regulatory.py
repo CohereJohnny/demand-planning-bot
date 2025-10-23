@@ -245,8 +245,12 @@ def calculate_compliance_cost(
             carbon_offset_price_per_ton_co2 = 75.0
             total_co2_tons = annual_fuel_consumption_tons * co2_per_ton_fuel
 
-            costs["cost_per_ton_fuel"] = carbon_offset_price_per_ton_co2 * co2_per_ton_fuel
-            costs["annual_recurring_cost"] = total_co2_tons * carbon_offset_price_per_ton_co2
+            costs["cost_per_ton_fuel"] = (
+                carbon_offset_price_per_ton_co2 * co2_per_ton_fuel
+            )
+            costs["annual_recurring_cost"] = (
+                total_co2_tons * carbon_offset_price_per_ton_co2
+            )
             costs["one_time_capex"] = 0
 
         elif compliance_strategy == "carbon_allowances":
@@ -475,4 +479,3 @@ def get_calculate_compliance_costs_tool(config: Config):
         return result
 
     return calculate_compliance_costs
-

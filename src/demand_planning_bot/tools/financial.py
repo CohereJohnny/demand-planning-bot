@@ -308,7 +308,9 @@ def get_calculate_roi_tool(config: Config):
                     else "Payback not achievable"
                 ),
                 "npv_verdict": (
-                    "Positive NPV - value creating" if metrics["npv"] > 0 else "Negative NPV - value destroying"
+                    "Positive NPV - value creating"
+                    if metrics["npv"] > 0
+                    else "Negative NPV - value destroying"
                 ),
             },
             "assumptions": [
@@ -327,4 +329,3 @@ def get_calculate_roi_tool(config: Config):
         return result
 
     return calculate_roi
-
