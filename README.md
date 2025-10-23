@@ -161,37 +161,117 @@ uv format --preview-features format
 uv format --preview-features format --check
 ```
 
-## Sprint 1 Status
+## Sprint Progress
 
-✅ **Completed**:
+### Sprint 1 - ✅ Complete
 - Project setup with uv
 - Configuration management (environment variables, validation)
 - API client utilities (error handling, retries)
 - Basic MCP server (stdio + HTTP transports)
 - Test tool (`ping`) for verification
 
-🚧 **Next Sprint**:
+### Sprint 2 - ✅ Complete
 - Market data tools (EIA API integration)
 - Geopolitical risk assessment (NewsAPI integration)
 - Error handling and fallback data
+- Comprehensive unit tests (26 tests)
+
+### Next Sprints
+- Supply chain disruption simulation
+- Inventory optimization tools
+- Financial analysis tools (ROI, revenue impact)
+- Regulatory compliance tools
 
 ## Available Tools
 
-### Sprint 1
+### `ping` (Test Tool)
+Test tool to verify server is working.
 
-- **`ping`**: Test tool to verify server is working
-  - Parameters: `message` (string, optional)
-  - Returns: Echo message and server status
+**Parameters**:
+- `message` (string, optional): Message to echo back
 
-### Future Sprints
+**Returns**: Echo message and server status
 
-- `get_market_prices`: Retrieve oil prices (Brent, WTI)
-- `get_geopolitical_risk_assessment`: Assess regional risks
-- `simulate_supply_disruption`: Model disruption impacts
-- `calculate_inventory_requirements`: Optimize safety stock
-- `calculate_carrying_costs`: Estimate storage costs
-- `calculate_revenue_impact`: Calculate stockout losses
-- `calculate_roi`: Compute investment ROI
+**Example**:
+```json
+{
+  "echo": "Hello",
+  "status": "Server is running",
+  "tools_available": "Sprint 2: Market data and risk assessment tools available"
+}
+```
+
+---
+
+### `get_market_prices` (Market Data)
+Get current or recent oil prices from EIA API. Retrieves spot prices for Brent crude or WTI (West Texas Intermediate) from the U.S. Energy Information Administration. Falls back to simulated data if API is unavailable.
+
+**Parameters**:
+- `product` (string, default: "brent"): Oil product type - "brent" for Brent crude or "wti" for WTI
+- `timeframe` (string, default: "current"): "current" for latest price, "recent" for last few days
+
+**Returns**: Dictionary with price information
+- `price`: Current spot price (float)
+- `product`: Product identifier (e.g., "BRENT")
+- `currency`: Currency (USD)
+- `unit`: Unit of measure (USD per barrel)
+- `date`: Price date
+- `data_source`: "eia_api" or "fallback"
+- `confidence`: Data confidence level ("high" or "medium")
+
+**Example**:
+```json
+{
+  "price": 85.50,
+  "product": "BRENT",
+  "currency": "USD",
+  "unit": "USD per barrel",
+  "date": "2025-10-23",
+  "data_source": "eia_api",
+  "confidence": "high"
+}
+```
+
+---
+
+### `get_geopolitical_risk_assessment` (Risk Analysis)
+Assess geopolitical risks affecting oil supply chains. Analyzes recent news to identify and quantify geopolitical risks that could impact oil supply routes and pricing. Uses NewsAPI for real-time news analysis with keyword-based risk scoring. Falls back to pre-defined scenarios if API is unavailable.
+
+**Parameters**:
+- `region` (string, default: "Strait of Hormuz"): Geographic region or chokepoint to assess (e.g., "Strait of Hormuz", "Middle East", "Russia Ukraine")
+- `timeframe_days` (integer, default: 7): Number of days of recent news to analyze
+
+**Returns**: Dictionary with risk assessment
+- `region`: Region assessed
+- `risk_probability`: Probability score (0-100%)
+- `risk_level`: "low", "medium", or "high"
+- `impact_description`: Detailed impact analysis
+- `news_headlines`: Supporting news article titles (list)
+- `confidence`: Data confidence level
+- `data_source`: "newsapi" or "fallback"
+
+**Example**:
+```json
+{
+  "region": "Strait of Hormuz",
+  "risk_probability": 25.0,
+  "risk_level": "medium",
+  "impact_description": "25% probability of temporary closure...",
+  "news_headlines": ["Tensions rise in Persian Gulf", "Iran naval exercises"],
+  "confidence": "high",
+  "data_source": "newsapi"
+}
+```
+
+---
+
+### Future Tools
+
+- `simulate_supply_disruption`: Model disruption impacts on refinery operations
+- `calculate_inventory_requirements`: Optimize safety stock levels
+- `calculate_carrying_costs`: Estimate storage and holding costs
+- `calculate_revenue_impact`: Calculate potential revenue loss from stockouts
+- `calculate_roi`: Compute ROI for inventory or operational decisions
 - `get_regulatory_updates`: Retrieve compliance requirements
 
 ## Troubleshooting

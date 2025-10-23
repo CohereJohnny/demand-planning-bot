@@ -12,6 +12,10 @@ import sys
 
 from north_mcp_python_sdk import NorthMCPServer
 
+from src.demand_planning_bot.tools.market_data import get_market_prices_tool
+from src.demand_planning_bot.tools.risk_assessment import (
+    get_geopolitical_risk_assessment_tool,
+)
 from src.demand_planning_bot.utils.config import load_config
 
 logger = logging.getLogger(__name__)
@@ -61,11 +65,22 @@ def create_server(config) -> NorthMCPServer:
         return {
             "echo": message,
             "status": "Server is running",
-            "tools_available": "Basic foundation ready for Sprint 1",
+            "tools_available": "Sprint 2: Market data and risk assessment tools available",
         }
 
+    # Register market data tool
+    get_market_prices = get_market_prices_tool(config)
+    mcp.tool()(get_market_prices)
+
+    # Register geopolitical risk assessment tool
+    get_geopolitical_risk_assessment = get_geopolitical_risk_assessment_tool(config)
+    mcp.tool()(get_geopolitical_risk_assessment)
+
     logger.info("MCP server configured successfully")
-    logger.info("Test tool 'ping' registered")
+    logger.info("Registered tools:")
+    logger.info("  - ping (test tool)")
+    logger.info("  - get_market_prices (EIA API - oil prices)")
+    logger.info("  - get_geopolitical_risk_assessment (NewsAPI - risk analysis)")
 
     return mcp
 
