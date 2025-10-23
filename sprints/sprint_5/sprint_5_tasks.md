@@ -109,24 +109,25 @@ Implement MCP Client with Cohere Command A integration to test the demand planni
 - [ ] 7.2 Test HTTP transport connection to MCP server
 - [x] 7.3 Test single tool call scenarios
 - [ ] 7.4 Test parallel tool calls
-- [ ] 7.5 Test multi-step tool use (agent behavior)
+- [x] 7.5 Test multi-step tool use (agent behavior)
 - [x] 7.6 Test conversation history across multiple turns
 - [ ] 7.7 Test use case scenarios from `specs/use-case.md`
 
 **Progress Notes**:
 - Created automated test suite (test_client.py)
 - ✅ TC1: Connection & tool discovery - PASS
-- ✅ TC3: Tool discovery - All 10 tools discovered
-- ✅ TC5: Simple tool call (ping) - PASS with 1 tool call, 3 citations
-- ✅ TC5: Market data query - PASS with real EIA data ($60.71/barrel)
-- ✅ TC6: Conversation history - PASS with 2-turn conversation
-- Test results: 4/4 tests passed (100%)
+- ✅ TC2: Simple tool call (ping) - PASS with 1 tool call, 4 citations
+- ✅ TC3: Market data query - PASS with real EIA data ($60.71/barrel)
+- ✅ TC4: Conversation history - PASS with 2-turn conversation, 8 messages
+- ✅ TC5: Multi-step agent behavior - PASS with 6 tool calls across 3 steps
+- Test results: 5/5 tests passed (100%)
 - Cohere Command A Reasoning model working perfectly
 
 **Bug Fixes**:
-- Fixed: Empty assistant messages causing Cohere API error
-- Fixed: Response text extraction from multi-item content arrays
-- Both fixes committed and verified with test suite
+- Fixed: Empty assistant messages causing Cohere API error in multi-turn conversations
+- Fixed: Text extraction not handling thinking-type content items correctly
+- Solution: Skip thinking items, only extract text-type content, don't add messages with no content
+- All fixes committed and verified with comprehensive test suite
 
 ---
 

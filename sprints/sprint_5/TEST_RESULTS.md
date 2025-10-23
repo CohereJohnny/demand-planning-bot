@@ -37,15 +37,22 @@ All automated tests passed successfully:
 **Fix**: Modified cohere_client.py to iterate all content items and check direct text field
 **Status**: Fixed ✅
 
+### Test 5: Multi-Step Agent Behavior ✅
+- ✅ Step 1: Risk assessment (1 tool call)
+- ✅ Step 2: Supply disruption simulation (2 tool calls) 
+- ✅ Step 3: Inventory requirements calculation (3 tool calls)
+- ✅ Total: 6 tool calls across 3 conversation steps
+- ✅ Context maintained correctly throughout multi-turn interaction
+- ✅ Demonstrates agent-like behavior with sequential tool use
+
 ## Remaining Test Cases
 
 From sprint_5_tasks.md:
 - [ ] 2.4 Add unit tests for schema conversion
-- [ ] 7.2 Test HTTP transport connection
-- [ ] 7.4 Test parallel tool calls
-- [ ] 7.5 Test multi-step tool use (agent behavior)
-- [ ] 7.7 Test use case scenarios
+- [ ] 7.2 Test HTTP transport connection (optional)
+- [ ] 7.4 Test parallel tool calls (needs specific scenario)
+- [ ] 7.7 Test use case scenarios from specs/use-case.md
 
 ---
-Results: **4/4 tests passed (100%)**
+Results: **5/5 tests passed (100%)**
 
