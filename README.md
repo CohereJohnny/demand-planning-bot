@@ -182,10 +182,14 @@ uv format --preview-features format --check
 - Carrying cost analysis (storage, insurance, opportunity cost)
 - Comprehensive unit tests (54 new tests, 80 total)
 
-### Next Sprint
-- Financial analysis tools (ROI, revenue impact)
-- Regulatory compliance tools
-- Integration testing and documentation
+### Sprint 4 - ✅ Complete
+- Financial analysis tools (revenue impact, ROI calculations)
+- Regulatory compliance tools (IMO regulations, compliance costs)
+- Comprehensive unit tests (72 new tests, 152 total)
+- Full MCP server with 10 tools (complete feature set)
+
+### Project Status
+**✅ ALL SPRINTS COMPLETE** - Production-ready MCP server for demand planning
 
 ## Available Tools
 
@@ -202,7 +206,7 @@ Test tool to verify server is working.
 {
   "echo": "Hello",
   "status": "Server is running",
-  "tools_available": "Sprint 3: Market, risk, supply chain, and inventory tools available"
+  "tools_available": "Sprint 4: Market, risk, supply chain, inventory, financial, and regulatory tools available"
 }
 ```
 
@@ -410,12 +414,175 @@ Calculate the total cost of holding additional inventory over a period. Includes
 
 ---
 
-### Future Tools (Sprint 4)
+### `calculate_revenue_impact` (Financial Analysis)
+Calculate potential revenue loss from stockout scenarios. Estimates the financial impact of stockouts including direct revenue loss, contract penalties, and customer satisfaction effects. Helps quantify the cost of inventory shortfalls and justifies inventory investments.
 
-- `calculate_revenue_impact`: Calculate potential revenue loss from stockouts
-- `calculate_roi`: Compute ROI for inventory or operational decisions
-- `get_regulatory_updates`: Retrieve IMO compliance requirements
-- `calculate_compliance_costs`: Estimate costs for regulatory compliance
+**Parameters**:
+- `stockout_days` (integer, default: 3): Number of days with stockouts (1-30)
+- `daily_demand_barrels` (number, default: 50000): Average daily demand in barrels
+- `price_per_barrel` (number, default: 85.0): Current price per barrel (USD)
+- `customer_impact_factor` (number, default: 1.2): Customer satisfaction multiplier (1.0-1.5)
+  - 1.0 = no additional impact
+  - 1.2 = 20% additional loss from dissatisfaction
+  - 1.5 = 50% additional loss from customer churn
+
+**Returns**: Dictionary with revenue impact analysis
+- `barrels_not_sold`: Quantity lost
+- `direct_revenue_loss`: Base revenue loss (USD)
+- `penalty_costs`: Contract violation penalties (10% of direct loss)
+- `customer_impact_loss`: Additional loss from customer dissatisfaction
+- `total_revenue_impact`: Total financial impact (USD)
+- `assumptions`: Calculation assumptions
+
+**Example**:
+```json
+{
+  "stockout_days": 3,
+  "daily_demand_barrels": 50000,
+  "price_per_barrel": 85.0,
+  "barrels_not_sold": 150000,
+  "direct_revenue_loss": 12750000.00,
+  "penalty_costs": 1275000.00,
+  "customer_impact_loss": 2550000.00,
+  "total_revenue_impact": 16575000.00,
+  "customer_impact_factor": 1.2,
+  "confidence": "high"
+}
+```
+
+---
+
+### `calculate_roi` (Financial Analysis)
+Calculate ROI and financial metrics for inventory or operational investments. Calculates return on investment, payback period, and net present value to help evaluate whether inventory increases, process improvements, or other investments are financially justified.
+
+**Parameters**:
+- `investment_cost` (number, default: 500000): Initial investment amount (USD)
+- `expected_annual_benefit` (number, default: 200000): Expected annual benefit or savings (USD)
+- `time_period_months` (integer, default: 24): Investment evaluation horizon (1-60 months)
+- `discount_rate` (number, default: 0.05): Annual discount rate for NPV (0.01-0.20, default 5%)
+
+**Returns**: Dictionary with ROI analysis
+- `roi_percentage`: Return on investment (%)
+- `net_benefit`: Total benefit minus cost (USD)
+- `payback_period_months`: Months to recover investment
+- `npv`: Net present value (USD)
+- `recommendation`: Investment quality rating (excellent/good/marginal/poor)
+- `interpretation`: Detailed assessment with ratings
+- `assumptions`: Calculation assumptions
+
+**Example**:
+```json
+{
+  "investment_cost": 500000,
+  "expected_annual_benefit": 300000,
+  "time_period_months": 24,
+  "roi_percentage": 20.0,
+  "net_benefit": 100000.00,
+  "payback_period_months": 20.0,
+  "npv": 50237.19,
+  "recommendation": "good",
+  "interpretation": {
+    "roi_rating": "Good (15-30%)",
+    "payback_assessment": "Moderate payback (12-24 months)",
+    "npv_verdict": "Positive NPV - value creating"
+  },
+  "confidence": "high"
+}
+```
+
+---
+
+### `get_regulatory_updates` (Regulatory Compliance)
+Get regulatory updates and compliance requirements for maritime fuel regulations. Retrieves information about IMO sulfur caps, carbon intensity targets, EU ETS, and other environmental regulations affecting oil and gas supply chains. Helps identify upcoming compliance requirements and deadlines.
+
+**Parameters**:
+- `regulation_type` (string, optional): Filter by regulation type
+  - `"sulfur"` = sulfur content regulations (IMO 2020, ECAs)
+  - `"carbon"` = carbon/GHG regulations (IMO 2030, IMO 2050, EU ETS)
+  - `None` = all regulations
+- `region` (string, optional): Filter by geographic scope
+  - `"global"` = worldwide regulations
+  - `"eu"` = EU-specific regulations
+  - `"eca_zones"` = Emission Control Area regulations
+  - `None` = all regions
+- `effective_after_date` (string, optional): Only return regulations effective on or after this date (format: YYYY-MM-DD)
+
+**Returns**: Dictionary with regulatory information
+- `regulations`: List of applicable regulations (each with name, description, effective date, requirements, compliance strategies, status)
+- `count`: Number of regulations found
+- `filters_applied`: Summary of filters used
+- `data_source`: "simulated_regulatory_database"
+
+**Example**:
+```json
+{
+  "regulations": [
+    {
+      "id": "imo_2030",
+      "name": "IMO 2030 Carbon Intensity Reduction",
+      "type": "carbon",
+      "description": "40% reduction in carbon intensity by 2030...",
+      "effective_date": "2030-01-01",
+      "region": "global",
+      "requirements": [
+        "Achieve 40% CO2 intensity reduction vs 2008 baseline",
+        "Implement EEXI and maintain CII rating of C or better"
+      ],
+      "compliance_strategies": [
+        "operational_efficiency",
+        "alternative_fuels",
+        "carbon_offsets"
+      ],
+      "status": "upcoming",
+      "days_until_effective": 1891,
+      "is_active": false
+    }
+  ],
+  "count": 1,
+  "confidence": "high"
+}
+```
+
+---
+
+### `calculate_compliance_costs` (Regulatory Compliance)
+Calculate estimated costs for regulatory compliance strategies. Estimates capital expenditures and recurring costs for different compliance approaches to sulfur and carbon regulations. Helps evaluate the financial impact of regulatory compliance options.
+
+**Parameters**:
+- `regulation_type` (string, default: "sulfur"): Type of regulation
+  - `"sulfur"` = sulfur content compliance (IMO 2020, ECAs)
+  - `"carbon"` = carbon/GHG compliance (IMO 2030, EU ETS)
+- `compliance_strategy` (string, default: "low_sulfur_fuel"): Strategy to achieve compliance
+  - For sulfur: `"low_sulfur_fuel"`, `"ultra_low_sulfur_fuel"`, `"scrubbers"`
+  - For carbon: `"carbon_offsets"`, `"carbon_allowances"`, `"operational_efficiency"`, `"alternative_fuels"`
+- `annual_fuel_consumption_tons` (number, default: 10000): Annual fuel consumption per vessel (metric tons)
+- `vessel_count` (integer, default: 1): Number of vessels in fleet
+
+**Returns**: Dictionary with compliance cost analysis
+- `one_time_capex`: One-time capital expenditure (USD)
+- `annual_recurring_cost`: Annual recurring costs per vessel (USD)
+- `cost_per_ton_fuel`: Additional cost per ton of fuel (USD)
+- `total_annual_cost_per_vessel`: Total annual cost per vessel (USD)
+- `total_fleet_annual_cost`: Total annual cost for entire fleet (USD)
+- `cost_per_barrel_impact`: Cost impact per barrel (USD)
+- `assumptions`: Calculation assumptions
+
+**Example**:
+```json
+{
+  "regulation_type": "sulfur",
+  "compliance_strategy": "low_sulfur_fuel",
+  "annual_fuel_consumption_tons": 10000,
+  "vessel_count": 1,
+  "one_time_capex": 0.00,
+  "annual_recurring_cost": 1750000.00,
+  "cost_per_ton_fuel": 175.00,
+  "total_annual_cost_per_vessel": 1750000.00,
+  "total_fleet_annual_cost": 1750000.00,
+  "cost_per_barrel_impact": 23.88,
+  "confidence": "medium"
+}
+```
 
 ## Troubleshooting
 
