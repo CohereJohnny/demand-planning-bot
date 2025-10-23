@@ -40,21 +40,21 @@
 - [ ] 5.7 Write unit tests for risk assessment tools
 
 ## 6. Supply Chain Simulation Tools
-- [ ] 6.1 Implement `simulate_supply_disruption` tool in `tools/supply_chain.py`
-- [ ] 6.2 Create simulated disruption models (Strait of Hormuz closure, pipeline outages, port closures)
-- [ ] 6.3 Calculate impact on refinery operations (feedstock shortage percentages)
-- [ ] 6.4 Calculate procurement cost increases due to alternative routes
-- [ ] 6.5 Include realistic refinery locations (Rotterdam, Singapore, etc.)
-- [ ] 6.6 Write unit tests for supply chain simulation
+- [x] 6.1 Implement `simulate_supply_disruption` tool in `tools/supply_chain.py`
+- [x] 6.2 Create simulated disruption models (Strait of Hormuz closure, pipeline outages, port closures)
+- [x] 6.3 Calculate impact on refinery operations (feedstock shortage percentages)
+- [x] 6.4 Calculate procurement cost increases due to alternative routes
+- [x] 6.5 Include realistic refinery locations (Rotterdam, Singapore, etc.)
+- [x] 6.6 Write unit tests for supply chain simulation
 
 ## 7. Inventory Optimization Tools
-- [ ] 7.1 Implement `calculate_inventory_requirements` tool in `tools/inventory.py`
-- [ ] 7.2 Calculate safety stock adjustments using industry formulas
-- [ ] 7.3 Calculate storage capacity requirements (barrels)
-- [ ] 7.4 Implement `calculate_carrying_costs` tool
-- [ ] 7.5 Calculate storage and holding costs over time periods
-- [ ] 7.6 Include unit conversions and currency support
-- [ ] 7.7 Write unit tests for inventory calculations
+- [x] 7.1 Implement `calculate_inventory_requirements` tool in `tools/inventory.py`
+- [x] 7.2 Calculate safety stock adjustments using industry formulas
+- [x] 7.3 Calculate storage capacity requirements (barrels)
+- [x] 7.4 Implement `calculate_carrying_costs` tool
+- [x] 7.5 Calculate storage and holding costs over time periods
+- [x] 7.6 Include unit conversions and currency support
+- [x] 7.7 Write unit tests for inventory calculations
 
 ## 8. Financial Calculation Tools
 - [ ] 8.1 Implement `calculate_revenue_impact` tool in `tools/financial.py`
