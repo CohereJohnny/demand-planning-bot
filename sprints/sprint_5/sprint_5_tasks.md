@@ -11,7 +11,7 @@ Implement MCP Client with Cohere Command A integration to test the demand planni
 - [x] 1.1 Add `cohere` SDK to pyproject.toml dependencies
 - [x] 1.2 Add `mcp` Python SDK for client capabilities  
 - [x] 1.3 Update .env.example with COHERE_API_KEY
-- [ ] 1.4 Update README.md with client usage instructions
+- [x] 1.4 Update README.md with client usage instructions
 
 **Progress Notes**:
 - Added cohere>=5.14.0 and mcp>=1.3.0 to dependencies
@@ -118,12 +118,16 @@ Implement MCP Client with Cohere Command A integration to test the demand planni
 ---
 
 ### 8. Documentation
-- [ ] 8.1 Add client usage guide to README.md
-- [ ] 8.2 Document Cohere API key setup
-- [ ] 8.3 Add example interactions
-- [ ] 8.4 Document transport options (stdio vs HTTP)
+- [x] 8.1 Add client usage guide to README.md
+- [x] 8.2 Document Cohere API key setup
+- [x] 8.3 Add example interactions
+- [x] 8.4 Document transport options (stdio vs HTTP)
 
 **Progress Notes**:
+- Complete client section added to README
+- Cohere API key setup documented
+- Example interactions with multi-step reasoning
+- All command-line options documented
 
 ---
 
