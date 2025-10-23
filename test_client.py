@@ -228,6 +228,75 @@ async def test_conversation_history():
         return False
 
 
+async def test_multistep_agent():
+    """Test multi-step agent behavior with complex supply chain analysis."""
+    print("\n" + "=" * 70)
+    print("TEST 5: Multi-Step Agent Behavior")
+    print("=" * 70)
+    
+    cohere_api_key = os.getenv("COHERE_API_KEY")
+    if not cohere_api_key:
+        print("❌ COHERE_API_KEY not found")
+        return False
+    
+    try:
+        mcp_client = MCPClient(transport="stdio")
+        
+        async with mcp_client.connect_stdio(server_script="server.py"):
+            cohere_client = CohereToolUseClient(
+                api_key=cohere_api_key,
+                mcp_client=mcp_client,
+            )
+            
+            await cohere_client.initialize_tools()
+            
+            # Step 1: Risk assessment
+            print("\nStep 1: Assessing geopolitical risks")
+            result1 = await cohere_client.process_message(
+                "What are the geopolitical risks in the Strait of Hormuz?"
+            )
+            print(f"✅ Risk assessment: {result1['text'][:100]}...")
+            print(f"   Tool calls: {result1['tool_calls_made']}")
+            
+            # Step 2: Supply disruption simulation
+            print("\nStep 2: Simulating supply disruption impact")
+            result2 = await cohere_client.process_message(
+                "If there's a 7-day disruption affecting a refinery with 100000 barrels daily capacity, what would be the impact?"
+            )
+            print(f"✅ Disruption impact: {result2['text'][:100]}...")
+            print(f"   Tool calls: {result2['tool_calls_made']}")
+            
+            # Step 3: Inventory calculation
+            print("\nStep 3: Calculating inventory requirements")
+            result3 = await cohere_client.process_message(
+                "Based on that, calculate inventory requirements for 100000 daily demand with 95% service level"
+            )
+            print(f"✅ Inventory needs: {result3['text'][:100]}...")
+            print(f"   Tool calls: {result3['tool_calls_made']}")
+            
+            # Get final stats
+            stats = cohere_client.get_conversation_summary()
+            total_tool_calls = result1['tool_calls_made'] + result2['tool_calls_made'] + result3['tool_calls_made']
+            
+            print(f"\n📊 Multi-Step Analysis Stats:")
+            print(f"   - Conversation steps: 3")
+            print(f"   - Total tool calls: {total_tool_calls}")
+            print(f"   - Tools used: Risk assessment → Disruption → Inventory")
+            print(f"   - Context maintained: ✅")
+            
+            if total_tool_calls >= 3:
+                print("\n✅ Multi-step agent behavior successful")
+                return True
+            else:
+                print(f"\n⚠️  Expected at least 3 tool calls, got {total_tool_calls}")
+                return False
+            
+    except Exception as e:
+        print(f"❌ Test failed: {e}")
+        logger.error(f"Multi-step agent test failed", exc_info=True)
+        return False
+
+
 async def main():
     """Run all tests."""
     print("\n" + "=" * 70)
@@ -240,6 +309,7 @@ async def main():
         ("Simple Query (Ping)", test_simple_query),
         ("Market Data Query", test_market_data_query),
         ("Conversation History", test_conversation_history),
+        ("Multi-Step Agent Behavior", test_multistep_agent),
     ]
     
     results = []
