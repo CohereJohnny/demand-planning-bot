@@ -27,7 +27,7 @@ class CohereToolUseClient:
         self,
         api_key: str,
         mcp_client: MCPClient,
-        model: str = "command-a-03-2025",
+        model: str = "command-a-reasoning-08-2025",
         max_iterations: int = 5,
     ):
         """Initialize the Cohere tool use client.
@@ -35,7 +35,7 @@ class CohereToolUseClient:
         Args:
             api_key: Cohere API key
             mcp_client: Connected MCP client instance
-            model: Cohere model to use (default: command-a-03-2025)
+            model: Cohere model to use (default: command-a-reasoning-08-2025)
             max_iterations: Maximum tool use iterations (default: 5)
         """
         self.cohere = cohere.ClientV2(api_key=api_key)

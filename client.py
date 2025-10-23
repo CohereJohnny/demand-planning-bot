@@ -42,8 +42,8 @@ Examples:
   # Connect via HTTP transport
   python client.py --transport streamable-http --port 8000
 
-  # Use a different Cohere model
-  python client.py --model command-r-plus
+  # Use a different Cohere model (if needed)
+  python client.py --model command-a-reasoning-08-2025
 
   # Enable debug logging
   python client.py --debug
@@ -66,8 +66,8 @@ Examples:
 
     parser.add_argument(
         "--model",
-        default="command-a-03-2025",
-        help="Cohere model to use (default: command-a-03-2025)",
+        default="command-a-reasoning-08-2025",
+        help="Cohere model to use (default: command-a-reasoning-08-2025)",
     )
 
     parser.add_argument(

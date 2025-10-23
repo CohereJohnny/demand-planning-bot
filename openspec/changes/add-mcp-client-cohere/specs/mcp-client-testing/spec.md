@@ -160,7 +160,7 @@ The system SHALL support configuration via environment variables and command-lin
 
 #### Scenario: Use default configuration
 - **WHEN** no command-line arguments are provided
-- **THEN** the system SHALL use default values (stdio transport, command-a-03-2025 model)
+- **THEN** the system SHALL use default values (stdio transport, command-a-reasoning-08-2025 model)
 - **AND** the system SHALL function correctly with defaults
 
 ### Requirement: Tool Use Testing Scenarios

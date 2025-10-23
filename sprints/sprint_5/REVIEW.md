@@ -410,7 +410,7 @@ conversation.py:       151 lines  ✅
 
 ### When implementing the Cohere client:
 - Use `cohere.ClientV2()` for latest API
-- Model: `command-a-03-2025` (from design decisions)
+- Model: `command-a-reasoning-08-2025` (reasoning model)
 - Pass tools on every chat call
 - Check for `tool_calls` in response before executing
 - Handle case where Cohere responds directly (no tools)

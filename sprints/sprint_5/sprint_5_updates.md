@@ -4,7 +4,7 @@
 Implement MCP Client with Cohere Command A integration to enable interactive testing of the demand planning MCP server.
 
 ## Key Decisions
-- Using Cohere Command A (command-a-03-2025) model for LLM integration
+- Using Cohere Command A Reasoning (command-a-reasoning-08-2025) model for LLM integration
 - Following Cohere's 4-step tool use workflow pattern
 - Converting MCP tool schemas to Cohere format at runtime
 - Supporting both stdio and HTTP transports for flexibility

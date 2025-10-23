@@ -130,8 +130,8 @@ Once connected, you can:
 # Use HTTP transport instead of stdio
 uv run python client.py --transport streamable-http --port 8000
 
-# Use a different Cohere model
-uv run python client.py --model command-r-plus
+# Use a different Cohere model (if needed)
+uv run python client.py --model command-a-reasoning-08-2025
 
 # Enable debug logging
 uv run python client.py --debug
