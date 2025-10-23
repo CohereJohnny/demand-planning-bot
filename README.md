@@ -17,10 +17,11 @@ An MCP (Model Context Protocol) server for AI-assisted demand planning in the Oi
 - **uv >= 0.8.13** (Python package manager)
 - **MCP Inspector** (for testing): `npx @modelcontextprotocol/inspector`
 
-### API Keys (Optional for Sprint 1)
+### API Keys
 
-- **EIA API** (free): [Register here](https://www.eia.gov/opendata/register.php)
-- **NewsAPI** (free tier available): [Register here](https://newsapi.org/register)
+- **EIA API** (free): [Register here](https://www.eia.gov/opendata/register.php) - for market data
+- **NewsAPI** (free tier available): [Register here](https://newsapi.org/register) - for risk assessment
+- **Cohere API** (free trial): [Get API key](https://dashboard.cohere.com/api-keys) - for interactive client
 
 ## Installation
 
@@ -75,11 +76,128 @@ Configure via `.env` file:
 |----------|-------------|----------|---------|
 | `EIA_API_KEY` | EIA API key for oil price data | No* | - |
 | `NEWS_API_KEY` | NewsAPI key for geopolitical news | No* | - |
+| `COHERE_API_KEY` | Cohere API key for interactive client | Yes (for client) | - |
 | `SERVER_SECRET` | Authentication secret for North platform | No | - |
 | `PORT` | HTTP server port | No | 5222 |
 | `DEBUG` | Enable debug logging (true/false) | No | false |
 
-*Tools will use fallback data if API keys are not provided
+*Server tools will use fallback data if API keys are not provided
+
+## Using the Interactive Client (Cohere Command A)
+
+The project includes an interactive CLI client that connects to the MCP server using Cohere's Command A model. This provides a conversational interface to test all MCP tools.
+
+### Prerequisites
+
+Get a free Cohere API key: [Cohere Dashboard](https://dashboard.cohere.com/api-keys)
+
+Add to `.env`:
+```bash
+COHERE_API_KEY=your_cohere_api_key_here
+```
+
+### Running the Client
+
+1. **Start the MCP server** (in one terminal):
+   ```bash
+   uv run python server.py --transport stdio
+   ```
+
+2. **Start the client** (in another terminal):
+   ```bash
+   uv run python client.py
+   ```
+
+### Client Commands
+
+Once connected, you can:
+
+- **Ask questions**: Type naturally to interact with demand planning tools
+  ```
+  You: What's the current price of Brent crude?
+  You: What's the geopolitical risk for the Strait of Hormuz?
+  You: Calculate ROI for increasing inventory by 50,000 barrels
+  ```
+
+- **`reset`** - Clear conversation history and start fresh
+- **`stats`** - Show conversation statistics (messages, tool calls)
+- **`debug`** - Display full conversation history
+- **`exit`** or **`quit`** - Exit the client
+
+### Client Options
+
+```bash
+# Use HTTP transport instead of stdio
+uv run python client.py --transport streamable-http --port 8000
+
+# Use a different Cohere model (if needed)
+uv run python client.py --model command-a-reasoning-08-2025
+
+# Enable debug logging
+uv run python client.py --debug
+
+# Use a different server script location
+uv run python client.py --server-script /path/to/server.py
+```
+
+### Example Interaction
+
+```
+======================================================================
+  Demand Planning MCP Client
+  Powered by Cohere Command A
+======================================================================
+
+🔍 Discovering tools from MCP server...
+✅ Discovered 10 tools:
+  - ping: Test tool to verify server is working...
+  - get_market_prices: Get current or historical oil prices...
+  - get_geopolitical_risk_assessment: Assess geopolitical ris...
+  [...]
+
+You: What's the current price of Brent crude oil?
+
+⏳ Processing...
+
+🔧 Tool Calls:
+  1. get_market_prices({"product":"brent","timeframe":"current"})
+
+💬 Response:
+  The current price of Brent crude oil is $76.45 per barrel (USD), 
+  as of January 15, 2025. This data comes from the EIA API.
+
+📎 Citations (1):
+  1. "$76.45 per barrel (USD)" (sources: 1)
+
+📊 Metadata:
+  - Tool calls: 1
+  - Conversation turns: 1
+
+You: reset
+
+🔄 Conversation reset
+```
+
+### Multi-Step Reasoning
+
+The client supports multi-step tool use where Cohere can call multiple tools sequentially to answer complex questions:
+
+```
+You: Analyze the impact of a Strait of Hormuz closure on our Rotterdam refinery 
+     and calculate if we should increase inventory
+
+⏳ Processing...
+
+🔧 Tool Calls:
+  1. get_geopolitical_risk_assessment({"region":"Strait of Hormuz"})
+  2. simulate_supply_disruption({"disruption":"hormuz_closure","refineries":["rotterdam"]})
+  3. calculate_inventory_requirements({"current_inventory":100000,...})
+  4. calculate_roi({"investment_cost":15000000,"expected_benefit":45000000})
+
+💬 Response:
+  Based on my analysis, I recommend increasing inventory by 20%. Here's why:
+  [detailed response with citations from all 4 tool calls]
+```
 
 ## Testing with MCP Inspector
 
