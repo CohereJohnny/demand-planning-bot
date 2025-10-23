@@ -8,8 +8,6 @@ import logging
 import math
 from typing import Dict, Literal
 
-from north_python_mcp_sdk import mcp
-
 from src.demand_planning_bot.utils.config import Config
 
 logger = logging.getLogger(__name__)
@@ -99,63 +97,6 @@ def get_calculate_inventory_requirements_tool(config: Config):
         A callable MCP tool function.
     """
 
-    @mcp.tool(
-        name="calculate_inventory_requirements",
-        description=(
-            "Calculate recommended inventory levels and safety stock based on demand "
-            "forecasts, risk levels, and lead times. Uses industry-standard formulas "
-            "(z-score method) to determine optimal safety stock to mitigate supply "
-            "chain risks while minimizing stockout probability."
-        ),
-        parameters={
-            "current_inventory_barrels": {
-                "type": "number",
-                "description": "Current inventory on hand (barrels)",
-                "default": 500000,
-            },
-            "daily_demand_barrels": {
-                "type": "number",
-                "description": "Average daily demand (barrels per day)",
-                "default": 50000,
-            },
-            "demand_std_dev_barrels": {
-                "type": "number",
-                "description": "Standard deviation of daily demand (barrels)",
-                "default": 5000,
-            },
-            "lead_time_days": {
-                "type": "number",
-                "description": (
-                    "Lead time for procurement in days "
-                    "(time from order to delivery)"
-                ),
-                "default": 21,
-            },
-            "risk_level": {
-                "type": "string",
-                "description": (
-                    "Assessed risk level from geopolitical analysis. "
-                    "Higher risk requires higher safety stock."
-                ),
-                "enum": ["low", "medium", "high"],
-                "default": "medium",
-            },
-        },
-        returns={
-            "type": "object",
-            "properties": {
-                "current_inventory_barrels": {"type": "number"},
-                "recommended_safety_stock_barrels": {"type": "number"},
-                "additional_storage_needed_barrels": {"type": "number"},
-                "safety_stock_increase_percentage": {"type": "number"},
-                "service_level_percentage": {"type": "number"},
-                "rationale": {"type": "string"},
-                "formula_used": {"type": "string"},
-                "assumptions": {"type": "array", "items": {"type": "string"}},
-                "confidence": {"type": "string"},
-            },
-        },
-    )
     def calculate_inventory_requirements(
         current_inventory_barrels: float = 500000,
         daily_demand_barrels: float = 50000,
@@ -243,52 +184,6 @@ def get_calculate_carrying_costs_tool(config: Config):
         A callable MCP tool function.
     """
 
-    @mcp.tool(
-        name="calculate_carrying_costs",
-        description=(
-            "Calculate the total cost of holding additional inventory over a period. "
-            "Includes storage costs (warehousing), insurance costs (risk protection), "
-            "and opportunity costs (capital tied up). Helps evaluate the financial "
-            "impact of inventory investments for risk mitigation."
-        ),
-        parameters={
-            "inventory_increase_barrels": {
-                "type": "number",
-                "description": "Additional inventory to hold (barrels)",
-                "default": 100000,
-            },
-            "duration_months": {
-                "type": "integer",
-                "description": "How long to hold the inventory (months)",
-                "default": 3,
-                "minimum": 1,
-                "maximum": 24,
-            },
-            "cost_per_barrel_month": {
-                "type": "number",
-                "description": (
-                    "Total cost to store one barrel for one month (USD). "
-                    "Industry typical: $1.00-$2.00/barrel/month"
-                ),
-                "default": 1.5,
-            },
-        },
-        returns={
-            "type": "object",
-            "properties": {
-                "inventory_increase_barrels": {"type": "number"},
-                "duration_months": {"type": "integer"},
-                "cost_per_barrel_month": {"type": "number"},
-                "storage_cost_usd": {"type": "number"},
-                "insurance_cost_usd": {"type": "number"},
-                "opportunity_cost_usd": {"type": "number"},
-                "total_carrying_cost_usd": {"type": "number"},
-                "monthly_carrying_cost_usd": {"type": "number"},
-                "cost_breakdown": {"type": "object"},
-                "assumptions": {"type": "array", "items": {"type": "string"}},
-            },
-        },
-    )
     def calculate_carrying_costs(
         inventory_increase_barrels: float = 100000,
         duration_months: int = 3,

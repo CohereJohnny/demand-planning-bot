@@ -8,8 +8,6 @@ import logging
 from datetime import datetime, timedelta
 from typing import Dict, List, Literal, Optional
 
-from north_python_mcp_sdk import mcp
-
 from src.demand_planning_bot.utils.config import Config
 
 logger = logging.getLogger(__name__)
@@ -235,76 +233,6 @@ def get_simulate_supply_disruption_tool(config: Config):
         A callable MCP tool function.
     """
 
-    @mcp.tool(
-        name="simulate_supply_disruption",
-        description=(
-            "Simulate the impact of a supply chain disruption on refinery operations. "
-            "Models scenarios like Strait of Hormuz closure, pipeline outages, port closures, "
-            "or weather events. Calculates feedstock shortages, cost increases, and timelines. "
-            "Provides alternative supply routes and mitigation strategies."
-        ),
-        parameters={
-            "disruption_type": {
-                "type": "string",
-                "description": (
-                    "Type of disruption to simulate. Options: "
-                    '"strait_of_hormuz_closure" (major chokepoint), '
-                    '"pipeline_outage" (crude transport), '
-                    '"port_closure" (loading/receiving), '
-                    '"weather_event" (hurricane/typhoon)'
-                ),
-                "enum": [
-                    "strait_of_hormuz_closure",
-                    "pipeline_outage",
-                    "port_closure",
-                    "weather_event",
-                ],
-                "default": "strait_of_hormuz_closure",
-            },
-            "affected_refineries": {
-                "type": "array",
-                "items": {"type": "string", "enum": ["rotterdam", "singapore"]},
-                "description": (
-                    'List of refineries to analyze. Options: "rotterdam", "singapore"'
-                ),
-                "default": ["rotterdam", "singapore"],
-            },
-            "duration_days": {
-                "type": "integer",
-                "description": "Expected duration of the disruption in days",
-                "default": 14,
-                "minimum": 1,
-                "maximum": 90,
-            },
-        },
-        returns={
-            "type": "object",
-            "properties": {
-                "disruption_type": {"type": "string"},
-                "disruption_name": {"type": "string"},
-                "description": {"type": "string"},
-                "severity": {"type": "string"},
-                "duration_days": {"type": "integer"},
-                "affected_refineries": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "refinery": {"type": "string"},
-                            "location": {"type": "string"},
-                            "feedstock_shortage_percentage": {"type": "number"},
-                            "procurement_cost_increase_percentage": {"type": "number"},
-                            "additional_procurement_cost_usd": {"type": "number"},
-                            "days_until_impact": {"type": "integer"},
-                            "mitigation_timeline": {"type": "array"},
-                            "alternative_routes": {"type": "array"},
-                        },
-                    },
-                },
-                "confidence": {"type": "string"},
-            },
-        },
-    )
     def simulate_supply_disruption(
         disruption_type: Literal[
             "strait_of_hormuz_closure", "pipeline_outage", "port_closure", "weather_event"
