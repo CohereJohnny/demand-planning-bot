@@ -47,11 +47,13 @@ class ConversationManager:
         message: dict[str, Any] = {"role": "assistant"}
 
         # Add text content if present
+        text_content = None
         if hasattr(response, "message") and hasattr(response.message, "content"):
             if response.message.content and len(response.message.content) > 0:
                 content_item = response.message.content[0]
                 if hasattr(content_item, "text"):
-                    message["content"] = content_item.text
+                    text_content = content_item.text
+                    message["content"] = text_content
 
         # Add tool_plan if present
         if hasattr(response, "message") and hasattr(response.message, "tool_plan"):
@@ -60,10 +62,18 @@ class ConversationManager:
                 logger.debug(f"Tool plan: {response.message.tool_plan}")
 
         # Add tool_calls if present
+        has_tool_calls = False
         if hasattr(response, "message") and hasattr(response.message, "tool_calls"):
             if response.message.tool_calls:
                 message["tool_calls"] = response.message.tool_calls
+                has_tool_calls = True
                 logger.debug(f"Tool calls: {len(response.message.tool_calls)}")
+
+        # Ensure message has content or tool_calls (required by Cohere API)
+        if not text_content and not has_tool_calls and "tool_plan" not in message:
+            # If no content and no tool calls, add empty content to satisfy API requirements
+            message["content"] = ""
+            logger.warning("Assistant message has no content or tool calls, adding empty content")
 
         self.messages.append(message)
         logger.info(f"Added assistant message with {len(message.get('tool_calls', []))} tool calls")
