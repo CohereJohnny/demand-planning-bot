@@ -55,25 +55,25 @@ class TestRegulationsDatabase:
         valid_types = ["sulfur", "carbon"]
 
         for reg_id, reg_data in REGULATIONS_DATABASE.items():
-            assert (
-                reg_data["type"] in valid_types
-            ), f"Invalid type for {reg_id}: {reg_data['type']}"
+            assert reg_data["type"] in valid_types, (
+                f"Invalid type for {reg_id}: {reg_data['type']}"
+            )
 
     def test_regulation_regions(self):
         """Test that regulations have valid regions."""
         valid_regions = ["global", "eu", "eca_zones"]
 
         for reg_id, reg_data in REGULATIONS_DATABASE.items():
-            assert (
-                reg_data["region"] in valid_regions
-            ), f"Invalid region for {reg_id}: {reg_data['region']}"
+            assert reg_data["region"] in valid_regions, (
+                f"Invalid region for {reg_id}: {reg_data['region']}"
+            )
 
     def test_compliance_strategies_not_empty(self):
         """Test that all regulations have compliance strategies."""
         for reg_id, reg_data in REGULATIONS_DATABASE.items():
-            assert (
-                len(reg_data["compliance_strategies"]) > 0
-            ), f"No compliance strategies for {reg_id}"
+            assert len(reg_data["compliance_strategies"]) > 0, (
+                f"No compliance strategies for {reg_id}"
+            )
 
 
 class TestFilterRegulations:
@@ -497,4 +497,3 @@ class TestCalculateComplianceCostsTool:
 
         for field in required_fields:
             assert field in result
-

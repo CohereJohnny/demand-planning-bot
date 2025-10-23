@@ -38,7 +38,9 @@ class TestCalculateStockoutRevenueLoss:
 
         # Direct loss: 3 days * 50,000 barrels * $85 = $12,750,000
         expected_direct_loss = 3 * 50000 * 85.0
-        assert result["direct_revenue_loss"] == pytest.approx(expected_direct_loss, rel=0.01)
+        assert result["direct_revenue_loss"] == pytest.approx(
+            expected_direct_loss, rel=0.01
+        )
 
         # Barrels not sold
         assert result["barrels_not_sold"] == 150000
@@ -62,7 +64,9 @@ class TestCalculateStockoutRevenueLoss:
         direct_loss = 3 * 50000 * 85.0
         # Customer impact: 20% additional loss (factor - 1.0)
         expected_customer_loss = direct_loss * 0.2
-        assert result["customer_impact_loss"] == pytest.approx(expected_customer_loss, rel=0.01)
+        assert result["customer_impact_loss"] == pytest.approx(
+            expected_customer_loss, rel=0.01
+        )
 
     def test_customer_impact_50_percent(self):
         """Test customer impact factor of 1.5 (50% additional loss)."""
@@ -76,7 +80,9 @@ class TestCalculateStockoutRevenueLoss:
         direct_loss = 5 * 40000 * 90.0
         # Customer impact: 50% additional loss
         expected_customer_loss = direct_loss * 0.5
-        assert result["customer_impact_loss"] == pytest.approx(expected_customer_loss, rel=0.01)
+        assert result["customer_impact_loss"] == pytest.approx(
+            expected_customer_loss, rel=0.01
+        )
 
     def test_total_impact_calculation(self):
         """Test that total impact is sum of all components."""
@@ -446,4 +452,3 @@ class TestCalculateROITool:
 
         for field in required_fields:
             assert field in result
-
