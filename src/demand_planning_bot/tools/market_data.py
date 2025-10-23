@@ -8,8 +8,8 @@ import logging
 from datetime import datetime
 from typing import Dict, Literal, Optional
 
-from demand_planning_bot.utils.api_client import APIClient, APIError, RateLimitError
-from demand_planning_bot.utils.config import Config
+from src.demand_planning_bot.utils.api_client import APIClient, APIError, RateLimitError
+from src.demand_planning_bot.utils.config import Config
 
 logger = logging.getLogger(__name__)
 
