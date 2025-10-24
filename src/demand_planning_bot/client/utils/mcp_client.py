@@ -8,6 +8,7 @@ This module provides utilities to:
 """
 
 import asyncio
+import base64
 import json
 import logging
 from contextlib import asynccontextmanager
@@ -78,11 +79,20 @@ class MCPClient:
         headers = {}
         
         # Add authentication header if server secret is provided
-        # Try both Authorization Bearer and X-Server-Secret formats
+        # Try multiple authentication formats that north-mcp-python-sdk might expect
         if server_secret:
+            # Format 1: Bearer token
             headers["Authorization"] = f"Bearer {server_secret}"
+            
+            # Format 2: Basic auth with base64 encoding
+            encoded_secret = base64.b64encode(f":{server_secret}".encode()).decode()
+            headers["Authorization-Basic"] = f"Basic {encoded_secret}"
+            
+            # Format 3: Custom header
             headers["X-Server-Secret"] = server_secret
-            logger.info(f"Connecting to MCP server at {url} with authentication")
+            
+            logger.info(f"Connecting to MCP server at {url} with authentication (trying multiple formats)")
+            logger.debug(f"Auth headers: Bearer, Basic (base64), X-Server-Secret")
         else:
             logger.info(f"Connecting to MCP server at {url} without authentication")
 
