@@ -36,11 +36,12 @@ from src.demand_planning_bot.utils.config import load_config
 logger = logging.getLogger(__name__)
 
 
-def create_server(config) -> NorthMCPServer:
+def create_server(config, host: str = "0.0.0.0") -> NorthMCPServer:
     """Create and configure the MCP server.
 
     Args:
         config: Configuration object with server settings.
+        host: Host address to bind to (default: 0.0.0.0 for all interfaces).
 
     Returns:
         Configured NorthMCPServer instance.
@@ -48,6 +49,7 @@ def create_server(config) -> NorthMCPServer:
     # Initialize server with configuration
     server_kwargs = {
         "name": "Demand Planning Server",
+        "host": host,
         "port": config.port,
     }
 
@@ -150,6 +152,12 @@ def parse_args():
     )
 
     parser.add_argument(
+        "--host",
+        default="0.0.0.0",
+        help="Host address to bind to (default: 0.0.0.0 for all interfaces)",
+    )
+
+    parser.add_argument(
         "--port",
         type=int,
         help="Port for HTTP transport (overrides PORT env var)",
@@ -185,12 +193,13 @@ def main():
     logger.info("AI-Assisted Demand Planning for Oil & Gas Supply Chain")
     logger.info("=" * 60)
     logger.info(f"Transport mode: {args.transport}")
+    logger.info(f"Host: {args.host}")
     logger.info(f"Port: {config.port}")
     logger.info(f"Debug mode: {config.debug}")
 
     try:
         # Create server
-        mcp = create_server(config)
+        mcp = create_server(config, host=args.host)
 
         # Start server with appropriate transport
         if args.transport == "stdio":
@@ -199,10 +208,10 @@ def main():
             mcp.run(transport="stdio")
         else:
             logger.info(
-                f"Starting server with Streamable HTTP transport on port {config.port}..."
+                f"Starting server with Streamable HTTP transport on {args.host}:{config.port}..."
             )
             logger.info(
-                f"Server will be available at: http://localhost:{config.port}/mcp"
+                f"Server will be available at: http://{args.host}:{config.port}/mcp"
             )
             logger.info("Connect using MCP Inspector with HTTP configuration")
             mcp.run(transport="streamable-http")

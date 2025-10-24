@@ -14,7 +14,8 @@ EnvironmentFile=/opt/demand-planning-bot/.env
 
 # Main server command - Streamable HTTP transport for production
 # Note: Uses Python from venv, which will use system python3
-ExecStart=/opt/demand-planning-bot/.venv/bin/python3 /opt/demand-planning-bot/server.py --transport streamable-http --port 5222
+# Bind to 0.0.0.0 to accept connections from all interfaces (not just localhost)
+ExecStart=/opt/demand-planning-bot/.venv/bin/python3 /opt/demand-planning-bot/server.py --transport streamable-http --host 0.0.0.0 --port 5222
 
 # Restart policy
 Restart=always
