@@ -65,16 +65,26 @@ class MCPClient:
                 yield session
 
     @asynccontextmanager
-    async def connect_http(self):
+    async def connect_http(self, server_secret: str | None = None):
         """Connect to MCP server via HTTP transport.
+
+        Args:
+            server_secret: Optional authentication secret for the server
 
         Yields:
             ClientSession for interacting with the server
         """
         url = f"http://{self.host}:{self.port}/mcp"
-        logger.info(f"Connecting to MCP server at {url}")
+        headers = {}
+        
+        # Add authentication header if server secret is provided
+        if server_secret:
+            headers["Authorization"] = f"Bearer {server_secret}"
+            logger.info(f"Connecting to MCP server at {url} with authentication")
+        else:
+            logger.info(f"Connecting to MCP server at {url} without authentication")
 
-        async with sse_client(url) as (read, write):
+        async with sse_client(url, headers=headers) as (read, write):
             async with ClientSession(read, write) as session:
                 # Initialize the connection
                 await session.initialize()

@@ -80,6 +80,11 @@ Examples:
     )
 
     parser.add_argument(
+        "--server-secret",
+        help="Server authentication secret (for HTTP transport)",
+    )
+
+    parser.add_argument(
         "--debug",
         action="store_true",
         help="Enable debug logging",
@@ -161,6 +166,11 @@ async def main():
         print("Or add it to your .env file")
         sys.exit(1)
 
+    # Get server secret from args or environment
+    server_secret = args.server_secret or os.getenv("SERVER_SECRET")
+    if args.transport == "streamable-http" and not server_secret:
+        logger.warning("No SERVER_SECRET provided - connecting without authentication")
+
     logger.info(f"Starting MCP client with transport={args.transport}, model={args.model}")
 
     # Initialize MCP client
@@ -172,7 +182,7 @@ async def main():
             context = mcp_client.connect_stdio(server_script=args.server_script)
             logger.info("Connecting to MCP server via stdio")
         else:  # streamable-http
-            context = mcp_client.connect_http()
+            context = mcp_client.connect_http(server_secret=server_secret)
             logger.info(f"Connecting to MCP server via HTTP at {args.host}:{args.port}")
 
         async with context:
