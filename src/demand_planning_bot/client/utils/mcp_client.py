@@ -15,6 +15,7 @@ from typing import Any
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
+from mcp.client.sse import sse_client
 
 logger = logging.getLogger(__name__)
 
@@ -59,6 +60,25 @@ class MCPClient:
                 # Initialize the connection
                 await session.initialize()
                 logger.info("Connected to MCP server via stdio")
+
+                self.session = session
+                yield session
+
+    @asynccontextmanager
+    async def connect_http(self):
+        """Connect to MCP server via HTTP transport.
+
+        Yields:
+            ClientSession for interacting with the server
+        """
+        url = f"http://{self.host}:{self.port}/mcp"
+        logger.info(f"Connecting to MCP server at {url}")
+
+        async with sse_client(url) as (read, write):
+            async with ClientSession(read, write) as session:
+                # Initialize the connection
+                await session.initialize()
+                logger.info(f"Connected to MCP server via HTTP at {url}")
 
                 self.session = session
                 yield session
