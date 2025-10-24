@@ -53,14 +53,15 @@ def create_server(config, host: str = "0.0.0.0") -> NorthMCPServer:
         "port": config.port,
     }
 
-    # Add server secret ONLY if configured (for authenticated mode)
-    # Do not include server_secret key at all when not configured to disable authentication
+    # Add server secret if configured, or use empty string to disable auth for HTTP
+    # The SDK requires the key for HTTP transport, so we use empty string to disable
     if config.has_server_secret:
         server_kwargs["server_secret"] = config.server_secret
         logger.info("Server authentication enabled with server_secret")
     else:
-        # Do NOT add server_secret key - omit it entirely to disable auth
-        logger.info("Server running without authentication (local testing mode)")
+        # Use empty string to explicitly disable authentication
+        server_kwargs["server_secret"] = ""
+        logger.info("Server running without authentication (empty server_secret)")
 
     # Add debug mode if enabled
     if config.debug:
