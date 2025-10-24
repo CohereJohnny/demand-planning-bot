@@ -78,8 +78,10 @@ class MCPClient:
         headers = {}
         
         # Add authentication header if server secret is provided
+        # Try both Authorization Bearer and X-Server-Secret formats
         if server_secret:
             headers["Authorization"] = f"Bearer {server_secret}"
+            headers["X-Server-Secret"] = server_secret
             logger.info(f"Connecting to MCP server at {url} with authentication")
         else:
             logger.info(f"Connecting to MCP server at {url} without authentication")
