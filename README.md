@@ -98,6 +98,8 @@ COHERE_API_KEY=your_cohere_api_key_here
 
 ### Running the Client
 
+#### Option 1: Local Testing (stdio transport)
+
 1. **Start the MCP server** (in one terminal):
    ```bash
    uv run python server.py --transport stdio
@@ -107,6 +109,24 @@ COHERE_API_KEY=your_cohere_api_key_here
    ```bash
    uv run python client.py
    ```
+
+#### Option 2: Remote Server (HTTP transport)
+
+Connect to a remote MCP server running on HTTP:
+
+```bash
+# Connect to remote server
+uv run python client.py --transport streamable-http --host 170.9.241.171 --port 5222
+
+# Connect to localhost HTTP
+uv run python client.py --transport streamable-http --host localhost --port 8000
+```
+
+**Note**: Ensure the remote server is running with HTTP transport:
+```bash
+# On remote server
+python server.py --transport streamable-http --port 5222
+```
 
 ### Client Commands
 

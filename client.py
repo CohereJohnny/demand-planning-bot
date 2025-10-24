@@ -39,7 +39,10 @@ Examples:
   # Connect via stdio transport (default)
   python client.py
 
-  # Connect via HTTP transport
+  # Connect via HTTP transport to a remote server
+  python client.py --transport streamable-http --host 170.9.241.171 --port 5222
+
+  # Connect via HTTP transport to localhost
   python client.py --transport streamable-http --port 8000
 
   # Use a different Cohere model (if needed)
@@ -55,6 +58,12 @@ Examples:
         choices=["stdio", "streamable-http"],
         default="stdio",
         help="Transport mode for MCP server connection (default: stdio)",
+    )
+
+    parser.add_argument(
+        "--host",
+        default="localhost",
+        help="Host for HTTP transport (default: localhost)",
     )
 
     parser.add_argument(
@@ -126,7 +135,7 @@ def print_stats(stats: dict):
     """Print conversation statistics."""
     print("\n📊 Conversation Statistics:")
     print(f"  - Total messages: {stats['total_messages']}")
-    print(f"  - Turns: {stats['turns']}")
+    print(f"  - Turns: {stats['turn_count']}")
     print(f"  - User messages: {stats['user_messages']}")
     print(f"  - Assistant messages: {stats['assistant_messages']}")
     print(f"  - Tool messages: {stats['tool_messages']}")
@@ -155,12 +164,19 @@ async def main():
     logger.info(f"Starting MCP client with transport={args.transport}, model={args.model}")
 
     # Initialize MCP client
-    mcp_client = MCPClient(transport=args.transport, port=args.port)
+    mcp_client = MCPClient(transport=args.transport, host=args.host, port=args.port)
 
     try:
-        # Connect to MCP server via stdio
-        async with mcp_client.connect_stdio(server_script=args.server_script):
-            logger.info("Connected to MCP server")
+        # Connect to MCP server based on transport mode
+        if args.transport == "stdio":
+            context = mcp_client.connect_stdio(server_script=args.server_script)
+            logger.info("Connecting to MCP server via stdio")
+        else:  # streamable-http
+            context = mcp_client.connect_http()
+            logger.info(f"Connecting to MCP server via HTTP at {args.host}:{args.port}")
+
+        async with context:
+            logger.info("Connected to MCP server successfully")
 
             # Initialize Cohere client
             cohere_client = CohereToolUseClient(

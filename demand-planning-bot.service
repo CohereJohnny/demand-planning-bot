@@ -1,0 +1,37 @@
+[Unit]
+Description=Demand Planning MCP Server
+After=network.target
+Documentation=https://github.com/CohereJohnny/demand-planning-bot
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/demand-planning-bot
+Environment="PATH=/opt/demand-planning-bot/.venv/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="PYTHONUNBUFFERED=1"
+EnvironmentFile=/opt/demand-planning-bot/.env
+
+# Main server command - Streamable HTTP transport for production
+# Note: Uses Python from venv, which will use system python3
+# Bind to 0.0.0.0 to accept connections from all interfaces (not just localhost)
+ExecStart=/opt/demand-planning-bot/.venv/bin/python3 /opt/demand-planning-bot/server.py --transport streamable-http --host 0.0.0.0 --port 5222
+
+# Restart policy
+Restart=always
+RestartSec=10
+StartLimitBurst=5
+StartLimitIntervalSec=300
+
+# Security hardening (reduced for uv venv compatibility)
+# Note: ProtectHome and ProtectSystem disabled because venv Python is in /home/ubuntu/.local/
+NoNewPrivileges=true
+PrivateTmp=true
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=demand-planning-bot
+
+[Install]
+WantedBy=multi-user.target
