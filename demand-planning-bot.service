@@ -13,7 +13,8 @@ Environment="PYTHONUNBUFFERED=1"
 EnvironmentFile=/opt/demand-planning-bot/.env
 
 # Main server command - HTTP transport for production
-ExecStart=/opt/demand-planning-bot/.venv/bin/python /opt/demand-planning-bot/server.py --transport http --port 8000
+# Note: Uses Python from venv, which will use system python3
+ExecStart=/opt/demand-planning-bot/.venv/bin/python3 /opt/demand-planning-bot/server.py --transport http --port 8000
 
 # Restart policy
 Restart=always

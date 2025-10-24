@@ -36,10 +36,10 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync
 ```
 
-**Option B: Using pip**
+**Option B: Using pip with system Python**
 ```bash
-# Create virtual environment
-python3 -m venv .venv
+# Create virtual environment with system python3
+/usr/bin/python3 -m venv .venv
 source .venv/bin/activate
 
 # Install dependencies
@@ -72,7 +72,7 @@ DEBUG_MODE=false
 
 **Generate a secure SERVER_SECRET:**
 ```bash
-python3 -c "import secrets; print(secrets.token_urlsafe(32))"
+/usr/bin/python3 -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
 ### 4. Create Log Directory
@@ -243,7 +243,7 @@ sudo systemctl edit demand-planning-bot
 # Test manually
 cd /opt/demand-planning-bot
 source .venv/bin/activate
-python server.py --transport http --port 8000
+python3 server.py --transport http --port 8000
 ```
 
 ---
@@ -258,7 +258,7 @@ The service file already runs as user `ubuntu`. Never run as `root`.
 
 ```bash
 # Generate strong secret (32+ characters)
-python3 -c "import secrets; print(secrets.token_urlsafe(32))"
+/usr/bin/python3 -c "import secrets; print(secrets.token_urlsafe(32))"
 
 # Add to .env
 echo "SERVER_SECRET=<generated-secret>" >> /opt/demand-planning-bot/.env
@@ -360,7 +360,7 @@ Edit service file to use stdio instead of HTTP:
 sudo nano /etc/systemd/system/demand-planning-bot.service
 
 # Change ExecStart line:
-# ExecStart=/opt/demand-planning-bot/.venv/bin/python /opt/demand-planning-bot/server.py --transport stdio
+# ExecStart=/opt/demand-planning-bot/.venv/bin/python3 /opt/demand-planning-bot/server.py --transport stdio
 
 sudo systemctl daemon-reload
 sudo systemctl restart demand-planning-bot
